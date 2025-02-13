@@ -44,4 +44,6 @@ def register_page(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'employee/dashboard.html')
+    employees = Employee.objects.all() 
+    return render(request, 'employee/dashboard.html', {'employees': employees})
+
