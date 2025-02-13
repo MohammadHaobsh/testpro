@@ -40,7 +40,25 @@ def register_page(request):
             messages.success(request, 'Account created successfully, you can log in now')
             return redirect('login')
 
-    return render(request, 'employee/register.html')
+    return render(request, 'employee/register.html')@login_required
+def add_employee(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        position = request.POST.get("position")  
+        if Employee.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+        else:
+            employee = Employee.objects.create_user(username=username, email=email, phone=phone)
+            employee.position = position 
+            employee.save()
+            messages.success(request, "Employee data added successfully!")
+            return redirect("dashboard")
+
+    return render(request, "employee/add_employee.html")
+
+add_employee
 
 @login_required
 def dashboard(request):
